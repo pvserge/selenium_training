@@ -1,1 +1,2 @@
-# selenium_traning
+# Repository for selenium training
+
