@@ -1,6 +1,19 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
+from fixture.application import Application
+
+fixture = None
+
+
+@pytest.fixture
+def app(request):
+    global fixture
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser='Firefox')
+
+    return fixture
+
 
 @pytest.fixture
 def driver(request):
