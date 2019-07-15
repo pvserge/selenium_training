@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.support.wait import WebDriverWait
 from fixture.session import SessionHelper
 from fixture.country import CountryHelper
 
@@ -18,6 +19,7 @@ class Application:
         self.wd.implicitly_wait(5)
         self.session = SessionHelper(self)
         self.country = CountryHelper(self)
+        self.wait = WebDriverWait(self.wd, 10)
 
     def open_page(self, url):
         wd = self.wd

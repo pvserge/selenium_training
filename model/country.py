@@ -8,7 +8,10 @@ class Country:
         self.zones = zones
 
     def __repr__(self):
-        return "%s:%s" % (self.id, self.name)
+        return "%s:%s:%s" % (self.id, self.code, self.name)
 
     def __eq__(self, other):
         return self.name == other.name
+
+    def get_name(self):
+        return self.name

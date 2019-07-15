@@ -12,4 +12,4 @@ class SessionHelper:
         wd.find_element_by_name("username").send_keys("admin")
         wd.find_element_by_name("password").send_keys("admin")
         wd.find_element_by_name("login").click()
-        wd.until(EC.title_is("My Store"))
+        self.app.wait.until(EC.title_is("My Store"))
