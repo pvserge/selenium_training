@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from fixture.session import SessionHelper
 from fixture.country import CountryHelper
+from fixture.product import ProductHelper
 
 
 class Application:
@@ -20,6 +21,7 @@ class Application:
         self.session = SessionHelper(self)
         self.country = CountryHelper(self)
         self.wait = WebDriverWait(self.wd, 10)
+        self.product = ProductHelper(self)
 
     def open_page(self, url):
         wd = self.wd
