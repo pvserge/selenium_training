@@ -1,3 +1,4 @@
+import re
 from model.product import Product
 
 
@@ -17,12 +18,14 @@ class ProductHelper:
         name = product.find_element_by_css_selector("div.name").text
         manufacturer = product.find_element_by_css_selector("div.manufacturer").text
         price = product.find_element_by_css_selector("s.regular-price").text
-        price_color = product.find_element_by_css_selector("s.regular-price").value_of_css_property("color")
+        price_color = re.search(r'\((.*?)\)', product.find_element_by_css_selector("s.regular-price")
+                                .value_of_css_property("color")).group(1).replace(" ", "").split(',')
         price_decoration = product.find_element_by_css_selector("s.regular-price").value_of_css_property("text-decoration-line")
         price_size = product.find_element_by_css_selector("s.regular-price").value_of_css_property(
             "font-size")[:-2]
         auc_price = product.find_element_by_css_selector(".campaign-price").text
-        auc_price_color = product.find_element_by_css_selector(".campaign-price").value_of_css_property("color")
+        auc_price_color = re.search(r'\((.*?)\)', product.find_element_by_css_selector(".campaign-price")
+                                    .value_of_css_property("color")).group(1).replace(" ", "").split(',')
         auc_price_decoration = product.find_element_by_css_selector(".campaign-price").value_of_css_property(
             "font-weight")
         auc_price_size = product.find_element_by_css_selector(".campaign-price").value_of_css_property(
@@ -38,13 +41,15 @@ class ProductHelper:
         wd.get(product.link)
         name = wd.find_element_by_css_selector("h1.title").text
         price = wd.find_element_by_css_selector("s.regular-price").text
-        price_color = wd.find_element_by_css_selector("s.regular-price").value_of_css_property("color")
+        price_color = re.search(r'\((.*?)\)', wd.find_element_by_css_selector("s.regular-price")
+                                .value_of_css_property("color")).group(1).replace(" ", "").split(',')
         price_decoration = wd.find_element_by_css_selector("s.regular-price").value_of_css_property(
             "text-decoration-line")
         price_size = wd.find_element_by_css_selector("s.regular-price").value_of_css_property(
             "font-size")[:-2]
         auc_price = wd.find_element_by_css_selector(".campaign-price").text
-        auc_price_color = wd.find_element_by_css_selector(".campaign-price").value_of_css_property("color")
+        auc_price_color = re.search(r'\((.*?)\)', wd.find_element_by_css_selector(".campaign-price")
+                                    .value_of_css_property("color")).group(1).replace(" ", "").split(',')
         auc_price_decoration = wd.find_element_by_css_selector(".campaign-price").value_of_css_property(
             "font-weight")
         auc_price_size = wd.find_element_by_css_selector(".campaign-price").value_of_css_property("font-size")[:-2]

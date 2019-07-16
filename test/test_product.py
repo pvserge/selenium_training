@@ -37,18 +37,14 @@ def test_product_page(app):
     # check that campaign price is bigger on appropriate product page
     assert float(product_detail.auc_price_size) > float(product_detail.price_size)
     # check colors
-    product_main_price_rgb = product_main.price_color[4:-1].replace(" ", "").split(',')
-    product_detail_price_rgb = product_detail.price_color[4:-1].replace(" ", "").split(',')
-    product_main_auc_price_rgb = product_main.auc_price_color[4:-1].replace(" ", "").split(',')
-    product_detail_auc_price_rgb = product_detail.auc_price_color[4:-1].replace(" ", "").split(',')
     # check that regular price in grey on main page (R=G=B)
-    assert int(product_main_price_rgb[0]) == int(product_main_price_rgb[1]) == int(product_main_price_rgb[2])
+    assert int(product_main.price_color[0]) == int(product_main.price_color[1]) == int(product_main.price_color[2])
     # check that regular price in grey on appropriate product page (R=G=B)
-    assert int(product_detail_price_rgb[0]) ==int(product_detail_price_rgb[1]) == int(product_detail_price_rgb[2])
+    assert int(product_detail.price_color[0]) ==int(product_detail.price_color[1]) == int(product_detail.price_color[2])
     # check that campaign price on main page has red color (G=B=0)
-    assert int(product_main_auc_price_rgb[1]) == int(product_main_auc_price_rgb[2]) == 0
+    assert int(product_main.auc_price_color[1]) == int(product_main.auc_price_color[2]) == 0
     # check that campaign price on appropriate product page has red color (G=B=0)
-    assert int(product_detail_auc_price_rgb[1]) == int(product_detail_auc_price_rgb[2]) == 0
+    assert int(product_detail.auc_price_color[1]) == int(product_detail.auc_price_color[2]) == 0
 
 
 
