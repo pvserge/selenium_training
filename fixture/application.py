@@ -3,6 +3,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from fixture.session import SessionHelper
 from fixture.country import CountryHelper
 from fixture.product import ProductHelper
+from fixture.user import UserHelper
 
 
 class Application:
@@ -15,6 +16,8 @@ class Application:
             self.wd = webdriver.Chrome()
         elif browser_upper == "IE":
             self.wd = webdriver.Ie()
+        elif browser_upper == "SAFARI":
+            self.wd = webdriver.Safari()
         else:
             raise ValueError("Unrecognized browser %s" % browser)
         self.wd.implicitly_wait(5)
@@ -22,6 +25,7 @@ class Application:
         self.country = CountryHelper(self)
         self.wait = WebDriverWait(self.wd, 10)
         self.product = ProductHelper(self)
+        self.user = UserHelper(self)
 
     def open_page(self, url):
         wd = self.wd

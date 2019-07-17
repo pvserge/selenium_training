@@ -40,7 +40,7 @@ def test_product_page(app):
     # check that regular price in grey on main page (R=G=B)
     assert int(product_main.price_color[0]) == int(product_main.price_color[1]) == int(product_main.price_color[2])
     # check that regular price in grey on appropriate product page (R=G=B)
-    assert int(product_detail.price_color[0]) ==int(product_detail.price_color[1]) == int(product_detail.price_color[2])
+    assert int(product_detail.price_color[0]) == int(product_detail.price_color[1]) == int(product_detail.price_color[2])
     # check that campaign price on main page has red color (G=B=0)
     assert int(product_main.auc_price_color[1]) == int(product_main.auc_price_color[2]) == 0
     # check that campaign price on appropriate product page has red color (G=B=0)
