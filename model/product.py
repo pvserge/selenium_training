@@ -1,7 +1,9 @@
 class Product:
 
     def __init__(self, name=None, manufacturer=None, price=None, auc_price=None, price_color=None, auc_price_color=None,
-                 price_decoration=None, auc_price_decoration=None, price_size=None, auc_price_size=None, link=None):
+                 price_decoration=None, auc_price_decoration=None, price_size=None, auc_price_size=None, link=None,
+                 status=None, code=None, gender=None, qty=None, image=None, date_from=None, date_to=None, keywords=None,
+                 short_description=None, description=None, title=None, meta=None, currency=None):
         self.name = name
         self.manufacturer = manufacturer
         self.price = price
@@ -25,6 +27,7 @@ class Product:
         self.description = description
         self.title = title
         self.meta = meta
+        self.currency = currency
 
     def __repr__(self):
         return "%s:%s:%s" % (self.name, self.price, self.auc_price)

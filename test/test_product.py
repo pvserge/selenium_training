@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from model.product import Product
 
 
 def test_stickers(app):
@@ -47,8 +48,13 @@ def test_product_page(app):
     assert int(product_detail.auc_price_color[1]) == int(product_detail.auc_price_color[2]) == 0
 
 
-def test_add_product(app):
-    pass
+def test_add_product(app, data_products):
+    product = data_products
+    old_products = app.product.get_product_list_from_admin_page()
+    app.product.add_new_product_to_catalog(product)
+    new_products = app.product.get_product_list_from_admin_page()
+    old_products.append(product)
+    assert sorted(old_products, key=Product.get_name) == sorted(new_products, key=Product.get_name)
 
 
 
