@@ -1,6 +1,3 @@
-from selenium.webdriver.support.ui import Select
-
-
 class UserHelper:
 
     def __init__(self, app):
@@ -25,10 +22,18 @@ class UserHelper:
             wd.find_element_by_name(field_name).clear()
             wd.find_element_by_name(field_name).send_keys(text)
 
+    def get_option_index_by_text(self, options, text):
+        for i in range(len(options)):
+            if options[i].text == text:
+                return i
+
     def select_field_value(self, field_name, value):
         wd = self.app.wd
         if value is not None:
-            Select(wd.find_element_by_css_selector("select[name=%s]" % field_name)).select_by_visible_text(value)
+            select = wd.find_element_by_css_selector("select[name=%s]" % field_name)
+            options = wd.find_elements_by_css_selector("select[name='%s'] option" % field_name)
+            index = self.get_option_index_by_text(options, value)
+            wd.execute_script("arguments[0].selectedIndex = %s; arguments[0].dispatchEvent(new Event('change'))" % index, select)
 
     def fill_form(self, user):
         self.change_field_value("tax_id", user.tax_id)
