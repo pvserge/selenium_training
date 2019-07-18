@@ -13,6 +13,18 @@ class Product:
         self.auc_price_decoration = auc_price_decoration
         self.auc_price_size = auc_price_size
         self.link = link
+        self.status = status
+        self.code = code
+        self.gender = gender
+        self.qty = qty
+        self.image = image
+        self.date_from = date_from
+        self.date_to = date_to
+        self.keywords = keywords
+        self.short_description = short_description
+        self.description = description
+        self.title = title
+        self.meta = meta
 
     def __repr__(self):
         return "%s:%s:%s" % (self.name, self.price, self.auc_price)

@@ -47,5 +47,10 @@ def test_product_page(app):
     assert int(product_detail.auc_price_color[1]) == int(product_detail.auc_price_color[2]) == 0
 
 
+def test_add_product(app):
+    pass
+
+
+
 
 
