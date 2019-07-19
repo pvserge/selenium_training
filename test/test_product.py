@@ -54,7 +54,15 @@ def test_add_product(app, data_products):
     app.product.add_new_product_to_catalog(product)
     new_products = app.product.get_product_list_from_admin_page()
     old_products.append(product)
-    assert sorted(old_products, key=Product.get_name) == sorted(new_products, key=Product.get_name)
+    new_product_names_list = []
+    for product in new_products:
+        new_product_names_list.append(product.name)
+    print(new_product_names_list)
+    old_product_names_list = []
+    for product in old_products:
+        old_product_names_list.append(product.name)
+    print(old_product_names_list)
+    assert old_product_names_list.sort() == new_product_names_list.sort()
 
 
 

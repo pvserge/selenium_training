@@ -89,18 +89,16 @@ class ProductHelper:
             if options[i].text == text:
                 return i
 
-    def check_radiobutton_by_name_text(self, field_name, text):
+    def check_radiobutton_by_value(self, field_name, value):
         wd = self.app.wd
-        if text is not None:
-            options = wd.find_elements_by_css_selector("input[name=%s]" % field_name)
-            value = self.get_option_value_by_text(options, text)
-            option = wd.find_element_by_css_selector("input[name=%s][value=%s]" % (field_name, value))
+        if value is not None:
+            option = wd.find_element_by_css_selector("input[name=%s][value='%s']" % (field_name, value))
             if not option.get_attribute("checked"):
                 option.click()
 
     def check(self, name, value):
         wd = self.app.wd
-        checkbox = wd.find_element_by_css_selector("input[name=%s][value=%s]" % (name, value))
+        checkbox = wd.find_element_by_css_selector("input[name='%s'][value='%s']" % (name, value))
         if not checkbox.get_attribute("checked"):
             checkbox.click()
 
@@ -126,10 +124,12 @@ class ProductHelper:
         # fill form on General tab
         wd.find_element_by_xpath("//a[@href='#tab-general']").click()
         time.sleep(3)
-        self.check_radiobutton_by_name_text("status", product.status)
+        self.check_radiobutton_by_value("status", product.status)
+        self.change_field_value("name[en]", product.name)
         self.change_field_value("code", product.code)
         self.check("product_groups[]", product.gender)
         self.change_field_value("quantity", product.qty)
+        wd.find_element_by_name("new_images[]").send_keys(product.image)
         self.change_field_value("date_valid_from", product.date_from)
         self.change_field_value("date_valid_to", product.date_to)
         # fill form on Information tab
@@ -141,7 +141,7 @@ class ProductHelper:
         self.change_field_value("description[en]", product.description)
         self.change_field_value("head_title[en]", product.title)
         self.change_field_value("meta_description[en]", product.meta)
-        # fill form on Prices tab
+        ## fill form on Prices tab
         wd.find_element_by_xpath("//a[@href='#tab-prices']").click()
         time.sleep(3)
         self.change_field_value("purchase_price", product.price)
