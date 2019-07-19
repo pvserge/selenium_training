@@ -64,8 +64,9 @@ class CountryHelper:
         for row in wd.find_elements_by_css_selector("table#table-zones tr:not(.header)"):
             cells = row.find_elements_by_css_selector("td")
             id = cells[0].text
-            select = Select(wd.find_element_by_css_selector("[name*='zone_code']"))
-            name = select.first_selected_option.text
-            zones_list.append(Zone(id=id, name=name))
+            if not id == "":
+                select = Select(wd.find_element_by_css_selector("[name*='zones[%s][zone_code']" % id))
+                name = select.first_selected_option.text
+                zones_list.append(Zone(id=id, name=name))
         return list(zones_list)
 
