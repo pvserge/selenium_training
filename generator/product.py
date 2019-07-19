@@ -22,7 +22,10 @@ class ProductGenerator:
             return (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%Y-%m-%d")
 
     def get_image(self, file):
-        return os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", file)
+        basename = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
+        print(basename)
+        path = os.path.join(basename, file)
+        return path
 
     def generate_product(self):
         return Product(name="N Bad Duck", status="1", code=self.random_digits(3), gender="1-3",

@@ -11,7 +11,7 @@ fixture = None
 def app(request):
     global fixture
     if fixture is None or not fixture.is_valid():
-        fixture = Application(browser='Firefox')
+        fixture = Application(browser='Chrome')
 
     def fin():
         fixture.destroy()
