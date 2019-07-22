@@ -20,10 +20,10 @@ class Application:
             self.wd = webdriver.Safari()
         else:
             raise ValueError("Unrecognized browser %s" % browser)
-        self.wd.implicitly_wait(10)
+        self.wd.implicitly_wait(1)
         self.session = SessionHelper(self)
         self.country = CountryHelper(self)
-        self.wait = WebDriverWait(self.wd, 10)
+        self.wait = WebDriverWait(self.wd, 5)
         self.product = ProductHelper(self)
         self.user = UserHelper(self)
 

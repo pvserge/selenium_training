@@ -1,5 +1,7 @@
 import re
 import time
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from model.product import Product
 
 
@@ -10,7 +12,9 @@ class ProductHelper:
 
     def open_product_page(self):
         wd = self.app.wd
-        wd.get("http://localhost/litecart/en/")
+        if not ("/litecart/en/" in wd.current_url and wd.find_element_by_css_selector("h3").text == "Login"):
+            wd.get("http://localhost/litecart/en/")
+            wd.find_element_by_css_selector("div#box-account-login h3")
 
     def are_elements_present(self, *args):
         return len(self.app.wd.find_elements(*args)) > 0
@@ -22,6 +26,12 @@ class ProductHelper:
         if not (wd.current_url.endswith("/litecart/admin/?app=catalog&doc=catalog") and wd.find_element_by_css_selector("h1").text == "Catalog"):
             wd.get("http://localhost/litecart/admin/?app=catalog&doc=catalog")
             wd.find_element_by_css_selector("td#content h1")
+
+    def open_cart_page(self):
+        wd = self.app.wd
+        if not ("/litecart/en/checkout" in wd.current_url and wd.find_element_by_css_selector("div#box-checkout-cart")):
+            self.open_product_page()
+            wd.find_element_by_css_selector("div#cart a.link").click()
 
     def get_first_campaigns_main(self):
         wd = self.app.wd
@@ -105,7 +115,7 @@ class ProductHelper:
     def select_field_value(self, field_name, value):
         wd = self.app.wd
         if value is not None:
-            select = wd.find_element_by_css_selector("select[name=%s]" % field_name)
+            select = wd.find_element_by_css_selector("select[name='%s']" % field_name)
             options = wd.find_elements_by_css_selector("select[name='%s'] option" % field_name)
             index = self.get_option_index_by_text(options, value)
             wd.execute_script("arguments[0].selectedIndex = %s; arguments[0].dispatchEvent(new Event('change'))" % index, select)
@@ -149,5 +159,44 @@ class ProductHelper:
         # submit form
         wd.find_element_by_css_selector("button[name=save]").click()
         wd.find_element_by_css_selector("td#content h1")
+
+    def add_first_product_to_cart(self):
+        wd = self.app.wd
+        wait = self.app.wait
+        self.open_product_page()
+        wd.find_elements_by_css_selector("div#box-most-popular li.product a.link")[0].click()
+        cart_counter = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div#cart span.quantity")))
+        text = cart_counter.text
+        if self.are_elements_present(By.CSS_SELECTOR, "[name='options[Size]']"):
+            self.select_field_value("options[Size]", "Small")
+        wd.find_element_by_name("add_cart_product").click()
+        wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "div#cart span.quantity"), str(int(text) + 1)))
+
+    def delete_first_product_from_cart(self):
+        wd = self.app.wd
+        wait = self.app.wait
+        self.open_cart_page()
+        table = wd.find_element_by_css_selector("table.dataTable")
+        if self.are_elements_present(By.CSS_SELECTOR, "li.shortcut a"):
+            wd.find_elements_by_css_selector("li.shortcut a")[0].click()
+        wd.find_element_by_name("remove_cart_item").click()
+        wait.until(EC.staleness_of(table))
+
+    def delete_products_from_cart(self):
+        wd = self.app.wd
+        self.open_cart_page()
+        items = wd.find_elements_by_css_selector("ul.items li.item")
+        for i in range(len(items)):
+            self.delete_first_product_from_cart()
+
+    def is_summary_table_exists(self):
+        if self.are_elements_present(By.CSS_SELECTOR, "table.dataTable") > 0:
+            return True
+        else:
+            return False
+
+
+
+
 
 
