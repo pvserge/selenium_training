@@ -16,3 +16,7 @@ def test_zones_order(app):
         zones_list = app.country.get_zones_list_edit_zone_page(country)
         print(zones_list)
         assert zones_list == sorted(zones_list, key=Country.get_name)
+
+
+def test_external_links_admin_edit_countries(app):
+    assert app.country.check_external_links_on_edit_page()
