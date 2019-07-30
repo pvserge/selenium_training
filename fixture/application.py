@@ -9,6 +9,7 @@ from fixture.user import UserHelper
 class Application:
 
     def __init__(self, browser):
+        self.selenium_grid_url = "http://192.168.1.155:4444/wd/hub"
         browser_upper = browser.upper()
         if browser_upper == "FIREFOX":
             self.wd = webdriver.Firefox()
@@ -18,6 +19,22 @@ class Application:
             self.wd = webdriver.Ie()
         elif browser_upper == "SAFARI":
             self.wd = webdriver.Safari()
+        elif browser_upper == "FIREFOX REMOTE":
+            capabilities = webdriver.DesiredCapabilities.FIREFOX.copy()
+            capabilities['platform'] = "MAC"
+            self.wd = webdriver.Remote(desired_capabilities=capabilities, command_executor=self.selenium_grid_url)
+        elif browser_upper == "CHROME REMOTE":
+            capabilities = webdriver.DesiredCapabilities.CHROME.copy()
+            capabilities['platform'] = "MAC"
+            self.wd = webdriver.Remote(desired_capabilities=capabilities, command_executor=self.selenium_grid_url)
+        elif browser_upper == "IE REMOTE":
+            capabilities = webdriver.DesiredCapabilities.INTERNETEXPLORER.copy()
+            capabilities['platform'] = "WINDOWS"
+            self.wd = webdriver.Remote(desired_capabilities=capabilities, command_executor=self.selenium_grid_url)
+        elif browser_upper == "SAFARI REMOTE":
+            capabilities = webdriver.DesiredCapabilities.SAFARI.copy()
+            capabilities['platform'] = "MAC"
+            self.wd = webdriver.Remote(desired_capabilities=capabilities, command_executor=self.selenium_grid_url)
         else:
             raise ValueError("Unrecognized browser %s" % browser)
         self.wd.implicitly_wait(1)

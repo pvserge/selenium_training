@@ -5,11 +5,11 @@ class UserHelper:
 
     def open_signup_page(self):
         wd = self.app.wd
-        wd.get("http://localhost/litecart/en/create_account")
+        wd.get("http://192.168.1.155/litecart/en/create_account")
 
     def login(self, user):
         wd = self.app.wd
-        self.app.open_page("http://localhost/litecart/")
+        self.app.open_page("http://192.168.1.155/litecart/")
         wd.find_element_by_css_selector("input[name=email]").send_keys(user.email)
         wd.find_element_by_css_selector("input[name=password]").send_keys(user.password)
         wd.find_element_by_css_selector("button[name=login]").click()
