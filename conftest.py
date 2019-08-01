@@ -27,9 +27,10 @@ def driver(request):
     # options = webdriver.ChromeOptions()
     # options.add_argument("start-maximized")
     # wd = webdriver.Chrome(chrome_options=options)
+    wd = webdriver.Chrome(desired_capabilities={"proxy": {"proxyType": "MANUAL", "httpProxy": "localhost:8888"}})
 
     # Firefox browser (new)
-    wd = webdriver.Firefox()
+    # wd = webdriver.Firefox()
     # wd = webdriver.Firefox(capabilities={"marionette": True})
     # Firefox browser ESR v45 (old)
     # wd = webdriver.Firefox(capabilities={"marionette": False}, firefox_binary="/Applications/Firefox 3.app/Contents/MacOS/firefox-bin")
