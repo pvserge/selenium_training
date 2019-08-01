@@ -27,6 +27,15 @@ class ProductHelper:
             wd.get("http://localhost/litecart/admin/?app=catalog&doc=catalog")
             wd.find_element_by_css_selector("td#content h1")
 
+    def open_products_on_catalog_page(self):
+        wd = self.app.wd
+        session = self.app.session
+        session.login_as_admin()
+        if not (wd.current_url.endswith("/litecart/admin/?app=catalog&doc=catalog&category_id=1")
+                and wd.find_element_by_css_selector("h1").text == "Catalog"):
+            wd.get("http://localhost/litecart/admin/?app=catalog&doc=catalog&category_id=1")
+            wd.find_element_by_css_selector("td#content h1")
+
     def open_cart_page(self):
         wd = self.app.wd
         if not ("/litecart/en/checkout" in wd.current_url and wd.find_element_by_css_selector("div#box-checkout-cart")):
@@ -195,6 +204,31 @@ class ProductHelper:
         else:
             return False
 
+    def get_products_from_admin_products_catalog(self):
+        wd = self.app.wd
+        self.open_products_on_catalog_page()
+        table = wd.find_elements_by_css_selector("table.dataTable tr.row")
+        product_list = []
+        for row in table:
+            cells = row.find_elements_by_css_selector("td")
+            name = cells[2].find_element_by_css_selector("a").text
+            link = cells[2].find_element_by_css_selector("a").get_attribute("href")
+            product_list.append(Product(name=name, link=link))
+        return list(product_list)
+
+    def check_log_clicking_products_on_admin_products_catalog(self):
+        wd = self.app.wd
+        result = True
+        products = self.get_products_from_admin_products_catalog()
+        for product in products:
+            print("Go to product %s by link %s" % (product.name, product.link))
+            wd.get(product.link)
+        messages = wd.get_log("browser")
+        if len(messages) > 0:
+            for msg in messages:
+                print(msg)
+                result = False
+        return result
 
 
 

@@ -65,6 +65,10 @@ def test_add_product(app, data_products):
     assert old_product_names_list.sort() == new_product_names_list.sort()
 
 
+def test_log_while_clicking_products(app):
+    assert app.product.check_log_clicking_products_on_admin_products_catalog()
+
+
 
 
 
