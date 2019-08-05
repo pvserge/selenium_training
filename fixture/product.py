@@ -3,18 +3,23 @@ import time
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from model.product import Product
+from pages.start_page import StartPage
+from pages.product_page import ProductPage
+from pages.cart_page import CartPage
 
 
 class ProductHelper:
 
     def __init__(self, app):
         self.app = app
+        self.wd = self.app.wd
+        self.start_page = StartPage(self.wd)
+        self.product_page = ProductPage(self.wd)
+        self.cart_page = CartPage(self.wd)
 
-    def open_product_page(self):
-        wd = self.app.wd
-        if not ("/litecart/en/" in wd.current_url and wd.find_element_by_css_selector("h3").text == "Login"):
-            wd.get("http://localhost/litecart/en/")
-            wd.find_element_by_css_selector("div#box-account-login h3")
+    def open_start_page(self):
+        if not self.start_page.is_on_this_page():
+            self.start_page.open()
 
     def are_elements_present(self, *args):
         return len(self.app.wd.find_elements(*args)) > 0
@@ -37,14 +42,13 @@ class ProductHelper:
             wd.find_element_by_css_selector("td#content h1")
 
     def open_cart_page(self):
-        wd = self.app.wd
-        if not ("/litecart/en/checkout" in wd.current_url and wd.find_element_by_css_selector("div#box-checkout-cart")):
-            self.open_product_page()
-            wd.find_element_by_css_selector("div#cart a.link").click()
+        if not self.cart_page.is_on_this_page():
+            self.open_start_page()
+            self.start_page.cart_link.click()
 
     def get_first_campaigns_main(self):
         wd = self.app.wd
-        self.open_product_page()
+        self.open_start_page()
         product = wd.find_element_by_css_selector("div#box-campaigns li.product")
         name = product.find_element_by_css_selector("div.name").text
         manufacturer = product.find_element_by_css_selector("div.manufacturer").text
@@ -170,36 +174,30 @@ class ProductHelper:
         wd.find_element_by_css_selector("td#content h1")
 
     def add_first_product_to_cart(self):
-        wd = self.app.wd
-        wait = self.app.wait
-        self.open_product_page()
-        wd.find_elements_by_css_selector("div#box-most-popular li.product a.link")[0].click()
-        cart_counter = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div#cart span.quantity")))
-        text = cart_counter.text
-        if self.are_elements_present(By.CSS_SELECTOR, "[name='options[Size]']"):
-            self.select_field_value("options[Size]", "Small")
-        wd.find_element_by_name("add_cart_product").click()
-        wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "div#cart span.quantity"), str(int(text) + 1)))
+        self.open_start_page()
+        self.start_page.first_popular_product.click()
+        self.product_page.select_small_size()
+        text = self.product_page.get_cart_counter_text()
+        self.product_page.add_button.click()
+        self.product_page.wait_cart_refresh(text)
 
     def delete_first_product_from_cart(self):
-        wd = self.app.wd
         wait = self.app.wait
         self.open_cart_page()
-        table = wd.find_element_by_css_selector("table.dataTable")
-        if self.are_elements_present(By.CSS_SELECTOR, "li.shortcut a"):
-            wd.find_elements_by_css_selector("li.shortcut a")[0].click()
-        wd.find_element_by_name("remove_cart_item").click()
+        table = self.cart_page.products_table
+        if self.cart_page.is_product_shortcut_exists():
+            self.cart_page.product_shortcut.click()
+        self.cart_page.remove_button.click()
         wait.until(EC.staleness_of(table))
 
     def delete_products_from_cart(self):
-        wd = self.app.wd
         self.open_cart_page()
-        items = wd.find_elements_by_css_selector("ul.items li.item")
+        items = self.cart_page.items_in_cart
         for i in range(len(items)):
             self.delete_first_product_from_cart()
 
     def is_summary_table_exists(self):
-        if self.are_elements_present(By.CSS_SELECTOR, "table.dataTable") > 0:
+        if self.cart_page.is_summary_table_exists():
             return True
         else:
             return False
